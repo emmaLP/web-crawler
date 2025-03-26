@@ -1,10 +1,13 @@
 package command
 
-import "net/url"
+import (
+	"log"
+	"net/url"
+)
 
 // Crawl struct contains the CLI args needed to start the crawl command
 type Crawl struct {
-	URL *url.URL `short:"u" help:"Scheme and Domain to web crawl."`
+	URL *url.URL `arg:"" help:"URL of the website to crawl. This can be just the domain or include the scheme. If no scheme is provided, it will default to https. For example: https://monzo.com or monzon.com"`
 
 }
 
@@ -13,6 +16,11 @@ type Crawl struct {
 // 
 // See [here](https://github.com/alecthomas/kong?tab=readme-ov-file#attach-a-run-error-method-to-each-command) for more info
 func (c *Crawl) Run() error {
+	if c.URL.Scheme == "" {
+		c.URL.Scheme= "https"
+	}
+	log.Print("URL:", c.URL.String())
 
+	//TODO Crawl here
 	return nil
 }
