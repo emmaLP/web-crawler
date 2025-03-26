@@ -1,0 +1,24 @@
+name: Build, Test & Validate
+on:
+  push: 
+    branches:
+      - main
+
+jobs:
+  lint:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
+      - name: Setup go
+        uses:  actions/setup-go@v5
+        with:
+          go-version: 1.24
+      - name: Run tests
+        run: go test  -race -v  -covermode=atomic -coverprofile=cover.out
+      - name: Check Coverage
+        uses: vladopajic/go-test-coverage@v2
+
