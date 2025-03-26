@@ -16,13 +16,20 @@ The solution is written with an entrypoint being a CLI but the main functionalit
 
 
 ## Running the CLI
-The CLI has the following options:
 
 ### Running locally
-To run locally you will need to execute the following commands:
+Build the CLI excutable:
 ```bash
 make build
-TODO fill in example
+```
+To crawl a website:
+```bash
+./bin/crawler crawl monzo.com
+```
+
+To see available options:
+```bash
+./bin/crawler 
 ```
 
 ### Running via Docker
