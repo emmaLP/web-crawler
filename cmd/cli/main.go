@@ -6,7 +6,7 @@ import (
 )
 
 var cli struct {
-  Crawler command.Crawl `cmd:"" help:""`
+  Crawl command.Crawl `cmd:"" help:""`
 }
 
 func main() {
