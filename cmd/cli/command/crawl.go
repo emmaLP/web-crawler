@@ -1,12 +1,17 @@
 package command
 
+import "net/url"
+
 // Crawl struct contains the CLI args needed to start the crawl command
 type Crawl struct {
-	Domain string `short:"d" help:"Domain to web crawl. You don't need to include the scheme (https/http)"`
-	Scheme string `short:"s" optional:"" default:"https" help:"Overrides the scheme for the URL used. Defaults to https"`
+	URL *url.URL `short:"u" help:"Scheme and Domain to web crawl."`
 
 }
 
+// Run executes the command with the necessary fields. 
+// This Run func signature is defined by the Kong package to support binidng more than one command in a single CLI
+// 
+// See [here](https://github.com/alecthomas/kong?tab=readme-ov-file#attach-a-run-error-method-to-each-command) for more info
 func (c *Crawl) Run() error {
 
 	return nil
