@@ -39,4 +39,6 @@ jobs:
         run: go test  -race -v  -covermode=atomic -coverprofile=cover.out ./...
       - name: Check Coverage
         uses: vladopajic/go-test-coverage@v2
+        with:
+          config: ./.testcoverage.yaml
 
