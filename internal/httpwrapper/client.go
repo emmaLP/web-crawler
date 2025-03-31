@@ -29,6 +29,7 @@ func New(httpClient httpClient) *Client {
 }
 
 // FetchPage fetches the page based on the URL and returns the body in reader format or an error if something goes wrong
+// url is a function variable as the url will likely change per request within the same instantiation
 func (c *Client) FetchPage(url string) (io.Reader, error) {
 	result, err := c.httpClient.Get(url)
 	if err != nil{
