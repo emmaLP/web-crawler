@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/url"
+	"sync"
 
 	"github.com/emmalp/web-crawler/internal/crawler"
 )
@@ -41,7 +42,10 @@ func (c *Crawl) Run() error {
 	}
 
 	// Log out the links as they are added to the channel
+	wg := sync.WaitGroup{}
+	wg.Add(1)
 	go func() {
+		defer wg.Done()
 		counter := 0
 		for {
 			link, more := <-links
@@ -59,6 +63,7 @@ func (c *Crawl) Run() error {
 	crawlerClient.GenerateSiteMap(links)
 
 	close(links)
+	wg.Wait()
 
 	return nil
 }
