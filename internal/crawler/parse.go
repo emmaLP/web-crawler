@@ -6,7 +6,6 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/rs/zerolog/log"
 	"golang.org/x/net/html"
 )
 
@@ -21,7 +20,6 @@ func extractSameHostLinksFromHTML(body io.Reader, targetURL *url.URL) []string {
 		currentPosition := htmTokenizer.Next()
 		//Check if reached the end of the input or an error has occurred
 		if currentPosition == html.ErrorToken {
-			log.Debug().Msgf("end of input")
 			// Sorting the URLs and then compacting them to remove any duplicate links
 			slices.Sort(links)
 			return slices.Compact(links)
@@ -45,12 +43,14 @@ func extractSameHostLinksFromHTML(body io.Reader, targetURL *url.URL) []string {
 }
 
 func parseReturnedLink(base *url.URL, link string) string {
-	log.Print("Link:", link)
 	newLink := link
+	// Return early if the link starts with `//` 
+	// We don't want to do anything to the link here
+	if strings.HasPrefix(link, "//"){
+		return strings.TrimSuffix(newLink, "/")
+	}
 	if strings.HasPrefix(link, "/") {
-		log.Print("Has prefix")
 		newLink = base.JoinPath(link).String()
-		log.Print("New link:", newLink)
 	}
 
 	return strings.TrimSuffix(newLink, "/")
