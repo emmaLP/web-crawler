@@ -1,6 +1,7 @@
 package command
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/url"
@@ -19,9 +20,14 @@ type Crawl struct {
 //
 // See [here](https://github.com/alecthomas/kong?tab=readme-ov-file#attach-a-run-error-method-to-each-command) for more info
 func (c *Crawl) Run() error {
+	if c.URL == nil {
+		return errors.New("url needed to crawl")
+	}
+
 	if c.URL.Scheme == "" {
 		c.URL.Scheme = "https"
 	}
+	
 	if c.URL.Host == "" {
 		//if you start the CLI with just a domain such as monzo.com, the kong cli parses that as a url path not the host
 		// we correct this here by re-running url.Parse now that we have a scheme set
@@ -31,7 +37,8 @@ func (c *Crawl) Run() error {
 		}
 		c.URL = url
 	}
-	//Blank any path as we only want the domain
+	
+	// Blank any path as we only want the domain
 	// This ensures no duplicates especially if there is trailing slash
 	c.URL.Path = ""
 
