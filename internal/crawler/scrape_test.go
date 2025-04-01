@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/url"
 	"strings"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -126,7 +127,10 @@ func Test_GenerateSiteMap(t *testing.T) {
 			outputChan := make(chan string)
 			var outputLinks []string
 
+			wg := sync.WaitGroup{}
+			wg.Add(1)
 			go func() {
+				defer wg.Done()
 				for {
 					link, more := <-outputChan
 
@@ -139,6 +143,7 @@ func Test_GenerateSiteMap(t *testing.T) {
 
 			client.GenerateSiteMap(outputChan)
 			close(outputChan)
+			wg.Wait()
 
 			assert.ElementsMatch(t, cfg.expectedLinks, outputLinks)
 		})
