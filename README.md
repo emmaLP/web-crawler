@@ -46,13 +46,13 @@ Worker -->[*]
 
 ### Entrypoint
 
-The solution is written with an entrypoint being a CLI but the main functionality has been seprataed out in order to make it useable in other entrypoints such as an API.
+The solution is written with the entrypoint being a CLI but the main functionality has been separated out in order to make it useable in other scenarios such as an API.
 
-The CLI code passes a output channel to stream the links to the log while the application is processing and fetching any new links found
+The CLI code passes a output channel to stream the links to the log while the application is processing and fetching any new links found.
 
 ### Concurrency
 
-This web crawler leverages go channels and go routines to support concurrent processing of fetching found URLs. The max concurrency in the CLI is currently hardcoded to 5 go routines, this could be exposed out in the CLI as a future improvements.
+This web crawler leverages channels and goroutines to support concurrent processing of fetching found URLs and logging out the found URLS. The max concurrency in the CLI is currently hardcoded to 5 go routines, this could be exposed out in the CLI as a future improvements.
 
 The solution uses 2 channels. One channel leveraged to concurrently find all the URLs using goroutines where each goroutine will fetch a link and if the body contains more links, then the new links are added to this channel.
 
@@ -88,17 +88,17 @@ To see available options:
 
 ### Notes
 
-This solution will not work when client side dynamically rendered HTML as it can only handle static HTML.
-For example, if you try crawl `https://monzo.com`, there no same domain links are found in `a[href]` HTML tags.
+This solution will not work when the webpage is client side dynamically rendered HTML as it can only handle static HTML.
+For example, if you try crawl `https://monzo.com`, there is no same domain links within base HTML as it used NextJS to render the page dynamically. GET requests in the code will not behave the same a browser rendering the content dynamically.
 
-As the main `monozo.com` website is dynamically generated, my live testing the CLI was done against the following websites:
+As the main `monozo.com` website is dynamically generated, my live testing of the CLI was done against the following websites:
 
-- `https://community.monzo.com`
+- `https://community.monzo.com` (eventually got rate limited :rofl:)
 - `https://www.weareink.co.uk`
 
 ### Further improvements
 
 1. Adding the ability to run the cli from a docker image. This would allow anyone to run the web crawler without needing to install specific software such as golang
-1. Make the the max concurrency number configurable. This is currently hardcoded to 5 in the CLI code.
-1. Consider limiting the number of links the process will crawl before exiting out. Currentlt the application will continue to crawl large websites until either the user exits the applications or the application runs out of memory. An example where this could be an issue is if you try crawl `https://www.google.com`
-1. The crawling functionality could be extending to be fronted with a Websocket API and a really basic HTML page so a user could load a UI and have the links printed in real time
+1. Make the max concurrency number configurable. This is currently hardcoded to 5 in the CLI code, the max concurrency could be exposed as a flag on the CLI to override the max concurrency.
+1. Consider limiting the number of links the application will crawl before exiting out. Currently the application will continue to crawl large websites until either the user exits the application or the application runs out of memory. An example where this could be an issue is if you try to crawl `https://www.google.com`
+1. The crawling functionality could be extending to be fronted with a Websocket API and a really basic HTML page so a user could load a UI and have the links printed in real time.
