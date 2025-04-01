@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/rs/zerolog/log"
 )
 
 type httpClient interface {
@@ -32,9 +30,8 @@ func New(httpClient httpClient) *Client {
 // url is a function variable as the url will likely change per request within the same instantiation
 func (c *Client) FetchPage(url string) (io.Reader, error) {
 	result, err := c.httpClient.Get(url)
-	if err != nil{
+	if err != nil {
 		return nil, fmt.Errorf("unable to perform get request to url (%v): %w", url, err)
 	}
-	log.Debug().Msgf("Result status: %d", result.StatusCode)
 	return result.Body, nil
 }
